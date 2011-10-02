@@ -19,3 +19,10 @@ corresponding to the long flag which invokes that action. Example:
 php bin/cli.php --foo-bar
 
 will try to call the fooBarAction in the Cli controller.
+
+Command line arguments can be configured in config.php by changing the
+"console_options" key. Example:
+
+'console_options' => array(
+    'foo-bar|f' => 'call the fooBarAction'
+),

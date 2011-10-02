@@ -44,11 +44,8 @@ class Bootstrap
 
     protected function setupOptions($app)
     {
-        // this can be read from the config
-        $opts = new \Zend\Console\Getopt(array(
-                'list-all|a' => 'List all defined routes',
-                'match-route|m=s' => 'Match a route'
-            ));
+        $options = $this->config->console_options->toArray();
+        $opts = new \Zend\Console\Getopt($options);
         
         $app->setOpts($opts);
     }
