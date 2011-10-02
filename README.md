@@ -12,3 +12,10 @@ zf2 project. This is currently set against Evan Coury's zf2-sandbox application.
 
 In src/Cli/Bootstrap.php::setupOptions are set the command line arguments and are
 read in src/Cli/Application.php::run
+
+For the cli "route" to match, you need to have an action in the Cli controller
+corresponding to the long flag which invokes that action. Example:
+
+php bin/cli.php --foo-bar
+
+will try to call the fooBarAction in the Cli controller.
