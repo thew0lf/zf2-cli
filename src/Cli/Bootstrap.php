@@ -46,8 +46,8 @@ class Bootstrap
     {
         // this can be read from the config
         $opts = new \Zend\Console\Getopt(array(
-                'all|a' => 'List all defined routes',
-                'match|m=s' => 'Match a route'
+                'list-all|a' => 'List all defined routes',
+                'match-route|m=s' => 'Match a route'
             ));
         
         $app->setOpts($opts);

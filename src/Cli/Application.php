@@ -72,46 +72,38 @@ class Application /* implements AppContext */
     {
         try {
             $opts = $this->getOpts();
-            
             $options = $opts->getOptions();
-            
-            $listAll = $opts->getOption('a');
-            $match = $opts->getOption('m');
-            
-            $actionName = null;
-            $controller = null;
-            
-            if($listAll === true) {
-                $actionName = 'list-all';
-            } else {
-                $actionName = 'match-route';
-            }
-        
-            $actionName = \Zend\Mvc\Controller\ActionController::getMethodFromAction($actionName);
-            
-            $locator = $this->getLocator();
-            
-            $controller = $locator->get('cli');
-            
-            if ($controller instanceof LocatorAware) {
-                $controller->setLocator($locator);
-            }
-            
-            $response = null;
-            
-            if (method_exists($controller, $actionName)) {
-                $response = $controller->$actionName();
-            } else {
-                $response = $opts->getUsageMessage();
-            }
-            
-            echo $response . PHP_EOL;
-            
         } catch (\Zend\Console\Exception\RuntimeException $e) {
-            echo $e->getUsageMessage();
-            exit;
+            $response = $e->getUsageMessage();
+            goto end;
         }
         
-//        return $response;
+        if (count($options) == 0) {
+            $response = $opts->getUsageMessage();
+            goto end;
+        }
+
+        $actionName = $options[0];
+
+        $actionName = \Zend\Mvc\Controller\ActionController::getMethodFromAction($actionName);
+
+        $locator = $this->getLocator();
+
+        $controller = $locator->get('cli');
+
+        if ($controller instanceof LocatorAware) {
+            $controller->setLocator($locator);
+        }
+
+        $response = null;
+
+        if (method_exists($controller, $actionName)) {
+            $response = $controller->$actionName();
+        } else {
+            goto end;
+        }
+        
+        end:
+        echo $response . PHP_EOL;
     }
 }
