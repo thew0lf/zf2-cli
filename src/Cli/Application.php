@@ -5,7 +5,8 @@ namespace Cli;
 use ArrayObject,
     Zend\Mvc\AppContext,
     Zend\Di\Exception\ClassNotFoundException,
-    Zend\Di\Locator;
+    Zend\Di\Locator,
+    Zend\Tool\Framework\Client\Console\ResponseDecorator\Blockize;
 
 /**
  * Main application class for invoking applications
@@ -63,19 +64,19 @@ class Application /* implements AppContext */
             $options = $opts->getOptions();
             $arguments = $opts->getRemainingArgs();
         } catch (\Zend\Console\Exception\RuntimeException $e) {
-            $response = $e->getUsageMessage();
+            $response = $this->getHelp();
             goto end;
         }
         
         if (count($arguments) == 0) {
-            $response = $opts->getUsageMessage();
+            $response = $this->getHelp();
             goto end;
         }
         
         $controllerName = array_shift($arguments);
         
         if (count($options) == 0) {
-            $response = $opts->getUsageMessage();
+            $response = $this->getHelp();
             goto end;
         }
 
@@ -88,7 +89,7 @@ class Application /* implements AppContext */
         try {
             $controller = $locator->get($controllerName);
         } catch (ClassNotFoundException $e) {
-            $response = $opts->getUsageMessage();
+            $response = $this->getHelp();
             goto end;
         }
 
@@ -106,5 +107,22 @@ class Application /* implements AppContext */
         
         end:
         echo $response . PHP_EOL;
+    }
+    
+    protected function getHelp()
+    {
+        $help = <<<HLP
+To run this CLI application, pass the name of the controller
+you want to invoke as the first argument and the name of the action
+as the second argument.
+HLP;
+        
+        $help .= PHP_EOL . $this->getOpts()->getUsageMessage();
+        
+        $decorator = new Blockize;
+        
+        $help = $decorator->decorate($help, 78);
+        
+        return $help;
     }
 }
