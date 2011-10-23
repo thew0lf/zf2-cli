@@ -14,7 +14,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(),
 ));
 
-$appConfig = include __DIR__ . '/../../zf2-sandbox/configs/application.config.php';
+$appConfig = include __DIR__ . '/../../zf2-tutorial/configs/application.config.php';
 
 $modules = $appConfig->modules->toArray();
 $modules[] = 'Cli';
