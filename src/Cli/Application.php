@@ -4,20 +4,8 @@ namespace Cli;
 
 use ArrayObject,
     Zend\Mvc\AppContext,
-    Zend\Mvc\Router,
     Zend\Di\Exception\ClassNotFoundException,
-    Zend\Di\Locator,
-    Zend\EventManager\EventCollection,
-    Zend\EventManager\EventManager,
-    Zend\EventManager\Event,
-    Zend\Http\Header\Cookie,
-    Zend\Http\Request as HttpRequest,
-    Zend\Http\Response as HttpResponse,
-    Zend\Stdlib\Dispatchable,
-    Zend\Stdlib\IsAssocArray,
-    Zend\Stdlib\Parameters,
-    Zend\Stdlib\RequestDescription as Request,
-    Zend\Stdlib\ResponseDescription as Response;
+    Zend\Di\Locator;
 
 /**
  * Main application class for invoking applications
@@ -99,7 +87,7 @@ class Application /* implements AppContext */
 
         try {
             $controller = $locator->get($controllerName);
-        } catch (Zend\Di\Exception\ClassNotFoundException $e) {
+        } catch (ClassNotFoundException $e) {
             $response = $opts->getUsageMessage();
             goto end;
         }
