@@ -73,10 +73,18 @@ class Application /* implements AppContext */
         try {
             $opts = $this->getOpts();
             $options = $opts->getOptions();
+            $arguments = $opts->getRemainingArgs();
         } catch (\Zend\Console\Exception\RuntimeException $e) {
             $response = $e->getUsageMessage();
             goto end;
         }
+        
+        if (count($arguments) == 0) {
+            $response = $opts->getUsageMessage();
+            goto end;
+        }
+        
+        $controllerName = array_shift($arguments);
         
         if (count($options) == 0) {
             $response = $opts->getUsageMessage();
@@ -89,7 +97,12 @@ class Application /* implements AppContext */
 
         $locator = $this->getLocator();
 
-        $controller = $locator->get('cli');
+        try {
+            $controller = $locator->get($controllerName);
+        } catch (Zend\Di\Exception\ClassNotFoundException $e) {
+            $response = $opts->getUsageMessage();
+            goto end;
+        }
 
         if ($controller instanceof LocatorAware) {
             $controller->setLocator($locator);
