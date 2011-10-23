@@ -3,10 +3,8 @@
 namespace Cli;
 
 use Zend\Config\Config,
-    Zend\Di\Configuration,
-    Zend\Di\Definition,
-    Zend\Di\Definition\Builder,
-    Zend\Di\DependencyInjector,
+    Zend\Di\Configuration as DiConfiguration,
+    Zend\Di\Di,
     Zend\EventManager\StaticEventManager;
 
 class Bootstrap
@@ -30,13 +28,10 @@ class Bootstrap
          * Instantiate and configure a DependencyInjector instance, or 
          * a ServiceLocator, and return it.
          */
-        $definition = new Definition\AggregateDefinition;
-        $definition->addDefinition(new Definition\RuntimeDefinition);
+        $di = new Di;
+        $di->instanceManager()->addTypePreference('Zend\Di\Locator', $di);
 
-        $di = new DependencyInjector();
-        $di->setDefinition($definition);
-
-        $config = new Configuration($this->config->di);
+        $config = new DiConfiguration($this->config->di);
         $config->configure($di);
 
         $app->setLocator($di);
