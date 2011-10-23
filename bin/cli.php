@@ -24,7 +24,7 @@ $moduleLoader->register();
 
 $moduleManager = new Zend\Module\Manager(
     $modules,
-    new Zend\Module\ManagerOptions($appConfig->module_config)
+    new Zend\Module\ManagerOptions($appConfig->module_manager_options)
 );
 
 // Get the merged config object
