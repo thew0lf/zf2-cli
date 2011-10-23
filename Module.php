@@ -2,7 +2,8 @@
 
 namespace Cli;
 
-use Zend\Config\Config;
+use Zend\Config\Config,
+    Zend\Loader\AutoloaderFactory;
 
 class Module
 {
