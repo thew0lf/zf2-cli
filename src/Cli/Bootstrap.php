@@ -19,6 +19,7 @@ class Bootstrap
     public function bootstrap(Application $app)
     {
         $this->setupLocator($app);
+        $this->setupRouter($app);
         $this->setupOptions($app);
     }
 
@@ -35,6 +36,13 @@ class Bootstrap
         $config->configure($di);
 
         $app->setLocator($di);
+    }
+    
+    protected function setupRouter($app)
+    {
+        $router = new Router();
+        $router->setRoutes($this->config->routes->toArray());
+        $app->setRouter($router);
     }
 
     protected function setupOptions($app)

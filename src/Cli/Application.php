@@ -36,6 +36,12 @@ class Application /* implements AppContext */
         return $this;
     }
 
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+    
     public function setOpts($opts)
     {
         $this->opts = $opts;
@@ -52,6 +58,11 @@ class Application /* implements AppContext */
         return $this->locator;
     }
     
+    public function getRouter()
+    {
+        return $this->router;
+    }
+    
     public function getOpts()
     {
         return $this->opts;
@@ -61,27 +72,23 @@ class Application /* implements AppContext */
     {
         try {
             $opts = $this->getOpts();
-            $options = $opts->getOptions();
             $arguments = $opts->getRemainingArgs();
         } catch (\Zend\Console\Exception\RuntimeException $e) {
             $response = $this->getHelp();
             goto end;
         }
         
-        if (count($arguments) == 0) {
+        $route = $this->getRouter()->match($arguments);
+        
+        if ($route === null) {
             $response = $this->getHelp();
             goto end;
         }
         
-        $controllerName = array_shift($arguments);
+        $moduleName = array_shift($route);
+        $controllerName = array_shift($route);
+        $actionName = array_shift($route);
         
-        if (count($options) == 0) {
-            $response = $this->getHelp();
-            goto end;
-        }
-
-        $actionName = $options[0];
-
         $actionName = \Zend\Mvc\Controller\ActionController::getMethodFromAction($actionName);
 
         $locator = $this->getLocator();
